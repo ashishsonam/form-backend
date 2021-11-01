@@ -1,10 +1,8 @@
 const express = require("express");
-
-// const { postFeedback } = require("../controllers/feedback");
-// const { requireSignin } = require("../middlewares/auth");
+const { newAdmission } = require("../controllers/admission");
 
 const router = express.Router();
 
-// router.post("/postFeedback", requireSignin, postFeedback);
+router.post("/newAdmission", newAdmission);
 
 module.exports = router;

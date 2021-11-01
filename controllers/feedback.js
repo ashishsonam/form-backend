@@ -5,27 +5,33 @@ const mysql = require("mysql");
 const { pool } = require("../helpers/db");
 
 exports.postFeedback = (req, res) => {
-  console.log(req.user);
+  if (req.user.username == "admin") {
+    return res.status(400).json({
+      success: false,
+      msg: "you are not allowed to access this route",
+    });
+  }
+  // console.log(req.user);
   const { feedback } = req.body;
 
   const student_id = feedback.student_id;
-  const subjects = feedback.subjects;
+  const courses = feedback.courses;
   let values = [];
-  subjects.forEach((subject) => {
+  courses.forEach((course) => {
     values = [
       ...values,
       [
         student_id,
-        subject.subject_code,
-        subject.q1,
-        subject.q2,
-        subject.q3,
-        subject.q4,
-        subject.q5,
-        subject.q6,
-        subject.q7,
-        subject.q8,
-        subject.q9,
+        course.course_code,
+        course.q1,
+        course.q2,
+        course.q3,
+        course.q4,
+        course.q5,
+        course.q6,
+        course.q7,
+        course.q8,
+        course.q9,
       ],
     ];
   });
@@ -40,7 +46,7 @@ exports.postFeedback = (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      msg: "Feedback and Student table updated",
+      msg: "Feedback posted",
     });
   });
 };
