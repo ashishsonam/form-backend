@@ -80,7 +80,7 @@ exports.addFaculty = (req, res) => {
       values = [...values, [course, faculty.id]];
     });
 
-    sql = "INSERT INTO COURSES_TAUGHT VALUES ?";
+    sql = "INSERT INTO TEACHES VALUES ?";
     query = mysql.format(sql, [values]);
     pool.query(query, (err, rows) => {
       if (err) {

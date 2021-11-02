@@ -108,7 +108,7 @@ CREATE TABLE `FACULTY` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `COURSES_TAUGHT` (
+CREATE TABLE `TEACHES` (
   `course_code` INT,
   `faculty_id` INT,
   PRIMARY KEY (`course_code`, `faculty_id`),
