@@ -6,6 +6,7 @@ const { pool } = require("../helpers/db");
 const { hashPassword } = require("../helpers/hashPassword");
 
 exports.register = (req, res) => {
+  console.log(req.body);
   const { user } = req.body;
   let sql =
     "SELECT DISTINCT 1 FROM REGISTRATION_DETAILS WHERE id = ? AND is_verified = true";
@@ -108,7 +109,7 @@ exports.login = (req, res) => {
         { user: user },
         process.env.ACCESS_TOKEN_SECRET,
         {
-          expiresIn: "3000s",
+          expiresIn: "30000000s",
         }
       );
       const refreshToken = jwt.sign(
@@ -133,62 +134,113 @@ exports.login = (req, res) => {
   });
 };
 
-// exports.protected = (req, res) => {
-//   console.log(`user = ${req.user}`);
-//   // if (req.user == null) {
-//   //   return res.status(400).json({
-//   //     success: false,
-//   //     msg: "Something went wrong",
-//   //   });
-//   // }
-//   console.log(`token expire = ${req.tokenExpire}`);
-//   let sql = "SELECT * FROM STUDENT WHERE `student_id` = ?";
-//   let query = mysql.format(sql, [req.user.username]);
-//   pool.query(query, (err, rows) => {
-//     if (err) {
-//       return res.status(400).json({
-//         success: false,
-//         error: err,
-//       });
-//     }
-//     let result = [];
-//     rows.forEach((row) => {
-//       result = [
-//         ...result,
-//         {
-//           student_id: row.student_id,
-//           name: row.name,
-//           year: row.year,
-//           semester: row.semester,
-//           date_of_feedback: row.date_of_feedback,
-//           branch: row.branch,
-//           section: row.section,
-//         },
-//       ];
-//     });
-//     console.log(result.length);
-//     if (result.length) {
-//       res.status(200).json(result);
-//     } else {
-//       return res.status(400).json({
-//         success: false,
-//         msg: "user not found",
-//       });
-//     }
-//   });
-// };
+exports.getCourses = (req, res) => {
+  const sql = "SELECT * FROM COURSES";
+  const query = mysql.format(sql);
+  pool.query(query, (err, rows) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        error: err,
+      });
+    }
+    let result = [];
+    rows.forEach((row) => {
+      result = [...result, { code: row.code, name: row.name }];
+    });
+    return res.status(200).json({
+      success: true,
+      msg: result,
+    });
+  });
+};
 
-// exports.test = (req, res) => {
-//   const sql = "SELECT * FROM USER";
-//   pool.query(sql, (err, rows) => {
-//     if (err) {
-//       return res.status(400).json({ err });
-//     }
-//     let result = [];
-//     rows.forEach((row) => {
-//       result = [...result, { username: row.username, password: row.password }];
-//     });
+exports.getCoursesSpecific = (req, res) => {
+  const sql =
+    "SELECT code, name FROM COURSES JOIN COURSES_TAKEN ON COURSES.code = COURSES_TAKEN.course_code WHERE student_id = ?";
+  const query = mysql.format(sql, [req.user.username]);
+  pool.query(query, (err, rows) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        error: err,
+      });
+    }
+    let result = [];
+    rows.forEach((row) => {
+      result = [...result, { code: row.code, name: row.name }];
+    });
+    return res.status(200).json({
+      success: true,
+      msg: result,
+    });
+  });
+};
 
-//     res.status(200).json(result);
-//   });
-// };
+exports.getName = (req, res) => {
+  console.log(`user = ${req.user}`);
+  if (req.user === undefined) {
+    return res.status(400).json({
+      success: false,
+      msg: "Something went wrong",
+    });
+  }
+  if (req.user.username === "admin") {
+    return res.status(200).json({
+      success: true,
+      msg: "admin",
+    });
+  }
+  // console.log(`token expire = ${req.tokenExpire}`);
+  let sql = "SELECT * FROM REGISTRATION_DETAILS WHERE `id` = ?";
+  let query = mysql.format(sql, [req.user.username]);
+  pool.query(query, (err, rows) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        error: err,
+      });
+    }
+    let result;
+    if (rows.length) {
+      result = rows[0].name;
+    }
+    // rows.forEach((row) => {
+    //   result = [
+    //     ...result,
+    //     {
+    //       name: row.name,
+    //     },
+    //   ];
+    // });
+    if (result != undefined) {
+      return res.status(200).json({
+        success: true,
+        msg: result,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        msg: "user not found",
+      });
+    }
+  });
+};
+
+exports.getUsername = (req, res) => {
+  // const sql = "SELECT * FROM USER WEHRE username = ?";
+  // const query = mysql.format(sql, )
+  // pool.query(sql, (err, rows) => {
+  //   if (err) {
+  //     return res.status(400).json({ err });
+  //   }
+  //   let result = [];
+  //   rows.forEach((row) => {
+  //     result = [...result, { username: row.username, password: row.password }];
+  //   });
+  res.status(200).json({
+    success: true,
+    username: req.user.username,
+  });
+  // });
+};

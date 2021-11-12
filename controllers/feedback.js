@@ -11,7 +11,7 @@ exports.postFeedback = (req, res) => {
       msg: "you are not allowed to access this route",
     });
   }
-  // console.log(req.user);
+  console.log(req.body);
   const { feedback } = req.body;
 
   const student_id = feedback.student_id;

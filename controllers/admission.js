@@ -1,11 +1,46 @@
+const { parse } = require("dotenv");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const mysql = require("mysql");
+const multer = require("multer");
 
 const { pool } = require("../helpers/db");
+const fs = require("fs");
+
+// var storage = multer.diskStorage({
+//   destination: (req, file, callBack) => {
+//     callBack(null, "./public/images/"); // './public/images/' directory name where save the file
+//   },
+//   filename: (req, file, callBack) => {
+//     callBack(
+//       null,
+//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+//     );
+//   },
+// });
+
+// var upload = multer({
+//   storage: storage,
+// });
+
+// exports.fileTest = (req, res) => {
+//   upload.single("image");
+
+//   console.log(req.file.filename);
+//   let imgsrc = "http://127.0.0.1:5000/images/" + req.file.filename;
+
+//   return res.status(400).json({
+//     success: false,
+//     msg: imgsrc,
+//   });
+// };
 
 exports.newAdmission = (req, res) => {
   const { form } = req.body;
+
+  // const
+
+  console.log(form.seat_allotment_letter);
 
   const registration_details = [
     [
@@ -29,9 +64,9 @@ exports.newAdmission = (req, res) => {
       form.minority_details,
       form.jee_roll_no,
       form.round_of_allotment,
-      form.air,
-      form.percentile,
-      form.year,
+      parseInt(form.air),
+      parseFloat(form.percentile),
+      parseInt(form.year),
       form.allotment_category,
       form.candidate_category,
       form.seat_allotment_letter,
@@ -58,17 +93,17 @@ exports.newAdmission = (req, res) => {
       form.jee_roll_no,
       "matric",
       matric.board_name,
-      matric.year_of_passing,
-      matric.marks_obtained,
-      matric.percentage,
+      parseInt(matric.year_of_passing),
+      parseInt(matric.marks_obtained),
+      parseFloat(matric.percentage),
     ],
     [
       form.jee_roll_no,
       "inter",
       inter.board_name,
-      inter.year_of_passing,
-      inter.marks_obtained,
-      inter.percentage,
+      parseInt(inter.year_of_passing),
+      parseInt(inter.marks_obtained),
+      parseFloat(inter.percentage),
     ],
   ];
 
@@ -81,14 +116,14 @@ exports.newAdmission = (req, res) => {
       "at_jossa_counselling",
       jossa.dd_ecs_no,
       jossa.date,
-      jossa.amount,
+      parseInt(jossa.amount),
     ],
     [
       form.jee_roll_no,
       "during_institute_reporting",
       institute.dd_ecs_no,
       institute.date,
-      institute.amount,
+      parseInt(institute.amount),
     ],
   ];
 
@@ -102,7 +137,7 @@ exports.newAdmission = (req, res) => {
       permanent.street,
       permanent.city,
       permanent.state,
-      permanent.pincode,
+      parseInt(permanent.pincode),
     ],
     [
       form.jee_roll_no,
@@ -110,7 +145,7 @@ exports.newAdmission = (req, res) => {
       correspondence.street,
       correspondence.city,
       correspondence.state,
-      correspondence.pincode,
+      parseInt(correspondence.pincode),
     ],
   ];
 

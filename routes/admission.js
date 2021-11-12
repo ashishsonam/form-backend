@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.post("/newAdmission", newAdmission);
 
+// router.post("/fileTest", fileTest);
+
 module.exports = router;

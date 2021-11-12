@@ -15,7 +15,7 @@ CREATE TABLE `REGISTRATION_DETAILS` (
   `mothers_name` VARCHAR(50),
   `mothers_occupation` VARCHAR(50),
   `branch` VARCHAR(20) CHECK (`branch` IN ('CSE', 'ECE')),
-  `physically_disabled` CHAR(3) CHECK (`physically_disabled` IN ('YES', 'NO')),
+  `physically_disabled` CHAR(1) CHECK (`physically_disabled` IN ('Y', 'N')),
   `minority_details` VARCHAR(20) CHECK (`minority_details` IN ('Muslim', 'Jain', 'Sikh', 'Christain', 'NA')),
   `jee_roll_no` VARCHAR(20),
   `round_of_allotment` INT CHECK (`round_of_allotment` IN (1, 2, 3, 4, 5, 6, 7)),
@@ -46,7 +46,7 @@ CREATE TABLE `EDUCATION` (
   `board_name` VARCHAR(50),
   `year_of_passing` INT,
   `marks_obtained` INT,
-  `percentage` INT,
+  `percentage` DECIMAL(10, 3),
   PRIMARY KEY (`jee_roll_no`, `class`),
   FOREIGN KEY (`jee_roll_no`) REFERENCES `REGISTRATION_DETAILS`(`jee_roll_no`)
 );
@@ -75,14 +75,13 @@ CREATE TABLE `ADDRESS` (
 CREATE TABLE `USER` (
   `username` VARCHAR(10),
   `password` VARCHAR(50),
-  PRIMARY KEY (`username`), 
+  PRIMARY KEY (`username`)
 );
 
 CREATE TABLE `STUDENT` (
   `id` VARCHAR(10),
   `year` INT,
   `semester` INT,
-  `date_of_feedback` DATE,
   `section` CHAR(1),
   PRIMARY KEY (`id`),
   FOREIGN KEY (`id`) REFERENCES `USER`(`username`)
@@ -112,14 +111,14 @@ CREATE TABLE `TEACHES` (
   `course_code` INT,
   `faculty_id` INT,
   PRIMARY KEY (`course_code`, `faculty_id`),
-  FOREIGN KEY (`course_code`) REFERENCES `COURSES`(`code`)
-  FOREIGN KEY (`faculty_id`) REFERENCES `FACULTY`(`id`),
+  FOREIGN KEY (`course_code`) REFERENCES `COURSES`(`code`),
+  FOREIGN KEY (`faculty_id`) REFERENCES `FACULTY`(`id`)
 );
 
 CREATE TABLE `FEEDBACK` (
   `student_id` VARCHAR(10),
   `course_code` INT,
-  `Q1` INT CHECK (`Q1` IN (1, 2, 3, 4, 5)),
+  `Q1` CHAR(1) CHECK (`Q1` IN ('Y', 'N')),
   `Q2` INT CHECK (`Q2` IN (1, 2, 3, 4, 5)),
   `Q3` INT CHECK (`Q3` IN (1, 2, 3, 4, 5)),
   `Q4` INT CHECK (`Q4` IN (1, 2, 3, 4, 5)),
@@ -133,9 +132,27 @@ CREATE TABLE `FEEDBACK` (
   FOREIGN KEY (`course_code`) REFERENCES `COURSES`(`code`)
 );
 
+
 UPDATE REGISTRATION_DETAILS 
 SET
   is_verified = true,
   id = (SELECT CONCAT("BT21", (SELECT branch FROM (SELECT * FROM REGISTRATION_DETAILS) AS REGISTRATION_DETAILS_NEW WHERE jee_roll_no = "122323423"), (SELECT RIGHT(1000 + COUNT(*) + 1, 3) FROM (SELECT * FROM REGISTRATION_DETAILS) AS REGISTRATION_DETAILS_NEW WHERE is_verified = true)))
 WHERE jee_roll_no = "122323423" AND is_verified = false;
 
+UPDATE REGISTRATION_DETAILS
+SET
+  photo = ?,
+  seat_allotment_letter = ?,
+  jee_rank_card = ?,
+  photo_id_proof = ?,
+  dob_proof = ?,
+  income_certificate = ?,
+  aadhar_card = ?,
+  caste_certificate = ?,
+  caste_validity = ?,
+  obc_ncl_certificate = ?,
+  disability_certificate = ?,
+  transfer_certificate = ?,
+  migration_certificate = ?,
+  gap_certificate = ?
+WHERE jee_roll_no = ?;
