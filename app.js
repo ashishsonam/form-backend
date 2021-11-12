@@ -10,6 +10,8 @@ const admin = require("./routes/admin");
 const admission = require("./routes/admission");
 
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const app = express();
 const PORT = 5000;
@@ -37,8 +39,14 @@ app.use("/api", feedback);
 app.use("/api/", admin);
 app.use("/api", admission);
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Server!!!");
+app.get("/", async (req, res) => {
+  const encryptedPassword = await bcrypt.hash("password", saltRounds);
+  const comparison = await bcrypt.compare("password", encryptedPassword);
+  res.send({
+    hash: encryptedPassword,
+    comparison: comparison,
+  });
+  // res.send("Welcome to the Server!!!");
 });
 
 app.listen(PORT, () => {

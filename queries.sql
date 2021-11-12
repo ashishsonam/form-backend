@@ -24,19 +24,19 @@ CREATE TABLE `REGISTRATION_DETAILS` (
   `year` INT,
   `allotment_category` VARCHAR(10) CHECK (`allotment_category` IN ('GEN', 'GEN-EWS', 'OBC', 'SC/ST')),
   `candidate_category` VARCHAR(10) CHECK (`candidate_category` IN ('GEN', 'GEN-EWS', 'OBC', 'SC/ST')),
-  `seat_allotment_letter` VARCHAR(50),
-  `jee_rank_card` VARCHAR(50),
-  `photo_id_proof` VARCHAR(50),
-  `dob_proof` VARCHAR(50),
-  `income_certificate` VARCHAR(50),
-  `aadhar_card` VARCHAR(50),
-  `caste_certificate` VARCHAR(50),
-  `caste_validity` VARCHAR(50),
-  `obc_ncl_certificate` VARCHAR(50),
-  `disability_certificate` VARCHAR(50),
-  `transfer_certificate` VARCHAR(50),
-  `migration_certificate` VARCHAR(50),
-  `gap_certificate` VARCHAR(50),
+  `seat_allotment_letter` LONGTEXT,
+  `jee_rank_card` LONGTEXT,
+  `photo_id_proof` LONGTEXT,
+  `dob_proof` LONGTEXT,
+  `income_certificate` LONGTEXT,
+  `aadhar_card` LONGTEXT,
+  `caste_certificate` LONGTEXT,
+  `caste_validity` LONGTEXT,
+  `obc_ncl_certificate` LONGTEXT,
+  `disability_certificate` LONGTEXT,
+  `transfer_certificate` LONGTEXT,
+  `migration_certificate` LONGTEXT,
+  `gap_certificate` LONGTEXT,
   PRIMARY KEY (`jee_roll_no`)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE `ADDRESS` (
 
 CREATE TABLE `USER` (
   `username` VARCHAR(10),
-  `password` VARCHAR(50),
+  `password` VARCHAR(255),
   PRIMARY KEY (`username`)
 );
 
