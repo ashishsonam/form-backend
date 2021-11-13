@@ -139,20 +139,3 @@ SET
   id = (SELECT CONCAT("BT21", (SELECT branch FROM (SELECT * FROM REGISTRATION_DETAILS) AS REGISTRATION_DETAILS_NEW WHERE jee_roll_no = "122323423"), (SELECT RIGHT(1000 + COUNT(*) + 1, 3) FROM (SELECT * FROM REGISTRATION_DETAILS) AS REGISTRATION_DETAILS_NEW WHERE is_verified = true)))
 WHERE jee_roll_no = "122323423" AND is_verified = false;
 
-UPDATE REGISTRATION_DETAILS
-SET
-  photo = ?,
-  seat_allotment_letter = ?,
-  jee_rank_card = ?,
-  photo_id_proof = ?,
-  dob_proof = ?,
-  income_certificate = ?,
-  aadhar_card = ?,
-  caste_certificate = ?,
-  caste_validity = ?,
-  obc_ncl_certificate = ?,
-  disability_certificate = ?,
-  transfer_certificate = ?,
-  migration_certificate = ?,
-  gap_certificate = ?
-WHERE jee_roll_no = ?;
